@@ -1,6 +1,7 @@
 package com.example.kevin.contacts;
 
 import android.content.DialogInterface;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     public static final String TAG = "Login";
@@ -35,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null) {
                     Log.d(TAG, "onAuthStateChanged: userId: " + user.getUid());
                     userId = user.getUid();
+                    setUserData();
                 } else {
                     Log.d(TAG, "onAuthStateChanged: logout!!!");
                 }
@@ -110,5 +117,18 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    private void setUserData() {
+        Log.d(TAG, "setUserData: ");
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = db.getReference("users");
 
+//        userRef.child(userId).child("phone").setValue("55633221");
+//        userRef.child(userId).child("nickname").setValue("Hank");
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("phone", "5566");
+        map.put("nickname", "Hank");
+
+        userRef.child(userId).setValue(map);
+    }
 }
